@@ -1,15 +1,15 @@
-import argparse
+# image_utils.py
 import os
 from PIL import Image
-
-# 定义当前版本号
-VERSION = "1.0.1"
+import argparse
 
 def validate_image_path(image_path):
     """
     验证图像文件路径是否有效。
 
     :param image_path: 图像文件的路径
+    :return: 有效的图像文件路径
+    :raises argparse.ArgumentTypeError: 如果图像文件不存在，则引发异常
     """
     if not os.path.exists(image_path):
         raise argparse.ArgumentTypeError("图像文件不存在。")
@@ -20,6 +20,8 @@ def validate_message(message):
     验证消息内容是否有效。
 
     :param message: 要隐藏的消息
+    :return: 验证通过的消息内容
+    :raises argparse.ArgumentTypeError: 如果消息为空，则引发异常
     """
     if not message:
         raise argparse.ArgumentTypeError("消息不能为空。")
@@ -89,35 +91,3 @@ def extract_message(image_path):
         print("错误: 图像文件不存在。")
     except Exception as e:
         print("错误:", e)
-
-
-def main():
-    parser = argparse.ArgumentParser(description="从图像中隐藏或提取消息")
-    parser.add_argument("--hide", metavar="<image_path> <message>", nargs=2, type=str, help="在图像中隐藏信息")
-    parser.add_argument("--extract", metavar="<image_path>", type=str, help="从图像中提取消息")
-    parser.add_argument("-v", "--version", action="version", version=f"版本号: {VERSION}", help="显示当前版本号")
-
-    args = parser.parse_args()
-
-    if args.hide:
-        image_path, message = args.hide
-        try:
-            image_path = validate_image_path(image_path)
-            message = validate_message(message)
-        except argparse.ArgumentTypeError as e:
-            print("错误:", e)
-            return
-        hide_message(image_path, message)
-    elif args.extract:
-        try:
-            image_path = validate_image_path(args.extract)
-        except argparse.ArgumentTypeError as e:
-            print("错误:", e)
-            return
-        extract_message(image_path)
-    else:
-        parser.print_help()
-
-
-if __name__ == "__main__":
-    main()
