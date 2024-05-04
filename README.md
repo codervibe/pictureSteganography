@@ -16,11 +16,10 @@ cd pictureSteganography
 
 1. 隐藏消息：
    ~~~
-   python pictureSteganography.py --hidden <image_path> <message>
-   python pictureSteganography.py --hd <image_path> <message>
+   python pictureSteganography.py --hide <image_path> <message>
    ~~~
    选项说明：
-   --hidden 或 --hd：指定要隐藏消息的图像文件和消息内容。
+   --hide ：指定要隐藏消息的图像文件和消息内容。
 
 2. 提取消息：
   `python pictureSteganography.py -e <image_path>`
@@ -29,12 +28,11 @@ cd pictureSteganography
 
 ## 示例：
 1. 隐藏消息：
-   `python script.py --hidden image.jpg "This is a hidden message"`
-   `python script.py --hd image.png "Another hidden message"`
+   `python script.py --hide image.jpg "This is a hidden message"`
 
 2. 提取消息：
    `python script.py -e hidden_image.jpg`
-   `python script.py -e hidden_image.png`
+   `python script.py -extract hidden_image.png`
 
 ## 注意事项：
 - 仅支持 PNG 和 JPEG 图像格式。

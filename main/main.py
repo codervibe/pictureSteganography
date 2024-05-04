@@ -3,8 +3,7 @@
 # -*- 作者： codervibe -*-
 # -*- 时间: 18 ：46 -*-
 # -*- 图片隐写术 -*-
-# -*-  2.0.0  -*-
-
+# -*-  2.0.0 -*-
 
 VERSION = "2.0.0"
 
@@ -57,6 +56,11 @@ def hide_message(image_path, message):
 
         if len(data) * 3 < message_length:
             raise ValueError("消息过长，无法隐藏在图像中。")
+
+        # 检查消息中是否只包含 '0' 和 '1' 的二进制字符
+        for char in message_bits:
+            if char not in ('0', '1'):
+                raise ValueError("消息包含无效的二进制字符，无法隐藏在图像中。")
 
         index = 0
         for pixel in data:
@@ -112,7 +116,7 @@ def main():
     """
     parser = argparse.ArgumentParser(description="从图像中隐藏或提取消息")
     parser.add_argument("--hide", metavar="<image_path> <message>", nargs=2, type=str, help="在图像中隐藏信息")
-    parser.add_argument("--extract", metavar="<image_path>", type=str, help="从图像中提取消息")
+    parser.add_argument("-e","--extract", metavar="<image_path>", type=str, help="从图像中提取消息")
     parser.add_argument("-v", "--version", action="version", version=f"版本号: {VERSION}", help="显示当前版本号")
 
     args = parser.parse_args()
