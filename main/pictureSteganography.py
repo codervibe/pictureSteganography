@@ -58,6 +58,8 @@ def hide_message(image_path, message):
         print("消息隐藏成功!")
     except FileNotFoundError:
         print("错误: 图像文件不存在。")
+    except ValueError as ve:
+        print("错误:", ve)
     except Exception as e:
         print("错误:", e)
 
