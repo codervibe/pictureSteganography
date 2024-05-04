@@ -1,6 +1,9 @@
 import argparse
 from PIL import Image
 
+# 定义当前版本号
+VERSION = "1.0.0"
+
 
 def hide_message(image_path, message):
     """
@@ -11,11 +14,10 @@ def hide_message(image_path, message):
     """
     try:
         img = Image.open(image_path)
-        # 使用最低有效位（LSB）方法隐藏消息
         data = img.getdata()
         encoded_data = []
-        message += "\0"  # 在消息末尾添加空字符，用于标记消息的结束
-        message_bits = ''.join(format(ord(char), '08b') for char in message)  # 将消息转换为二进制字符串
+        message += "\0"
+        message_bits = ''.join(format(ord(char), '08b') for char in message)
         message_length = len(message_bits)
 
         if len(data) * 3 < message_length:
@@ -24,7 +26,6 @@ def hide_message(image_path, message):
         index = 0
         for pixel in data:
             if index < message_length:
-                # 修改像素的最后一个比特位
                 encoded_pixel = list(pixel)
                 encoded_pixel[-1] = int(message_bits[index])
                 encoded_data.append(tuple(encoded_pixel))
@@ -35,6 +36,8 @@ def hide_message(image_path, message):
         img.putdata(encoded_data)
         img.save(image_path)
         print("消息隐藏成功!")
+    except FileNotFoundError:
+        print("错误: 图像文件不存在。")
     except Exception as e:
         print("错误:", e)
 
@@ -50,7 +53,7 @@ def extract_message(image_path):
         data = img.getdata()
         extracted_bits = []
         for pixel in data:
-            extracted_bits.append(str(pixel[-1]))  # 获取每个像素的最后一个比特位
+            extracted_bits.append(str(pixel[-1]))
 
         binary_message = ''.join(extracted_bits)
         message = ""
@@ -60,6 +63,8 @@ def extract_message(image_path):
             if message[-1] == "\0":
                 break
         print("提取的消息:", message.rstrip("\0"))
+    except FileNotFoundError:
+        print("错误: 图像文件不存在。")
     except Exception as e:
         print("错误:", e)
 
@@ -68,6 +73,7 @@ def main():
     parser = argparse.ArgumentParser(description="从图像中隐藏或提取消息")
     parser.add_argument("--hide", metavar="<image_path> <message>", nargs=2, help="在图像中隐藏信息")
     parser.add_argument("--extract", metavar="<image_path>", help="从图像中提取消息")
+    parser.add_argument("-v", "--version", action="version", version=f"版本号: {VERSION}", help="显示当前版本号")
 
     args = parser.parse_args()
 
